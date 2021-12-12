@@ -1,0 +1,230 @@
+/* 
+welcome  */
+
+
+.welcome-container{
+    border-radius: 25px;
+    background-color: 	#262f39;
+    height: 300px;
+    width: 1600px;
+    margin: 0 auto;
+    color: white;
+   
+    
+}
+
+/* 
+navbar */
+
+.navbar_links {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+
+
+  }
+  /* .navbar_links:hover {
+    transition: all 0.2s ease-out;
+    background-color: transparent;
+    color:red;
+    border-radius: 1px;
+  } */
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+    background-color: 	#262f39;
+  }
+  li {
+    float: left;
+    list-style-type: none;
+  }
+
+  li a:hover {
+
+    color:#646e83
+  }
+
+
+
+
+
+
+/* game  */
+
+
+  input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+ input[id=synopsis]{
+    height:250px
+  }
+
+ .addgame-form,label{
+     text-align: left;
+ }
+
+
+  .addgame-form{
+    padding: 50px;
+    border-radius: 25px;
+    background-color: 	#262f39;
+
+    width: 1600px;
+    margin: 0 auto;
+    color: white;
+   
+    
+}
+
+#genre1{
+  width: 100px;
+}
+
+#genre2,#genre3,#genre4{
+  margin-left:10px;
+  width:100px;
+}
+
+/* 
+Footer */
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: 	#262f39;
+    color: white;
+    text-align: center;
+    padding:1px;
+ }
+
+ /* gamelist */
+
+
+
+
+ .gamelist-box{
+    padding: 50px;
+    border-radius: 25px;
+    background-color: 	#262f39;
+    width: 1600px;
+    height:800px;
+    margin: 0 auto;
+    color: white;
+ }
+ 
+
+
+#edit-button{
+  background-color: chartreuse;
+}
+#delete-button{
+  background-color: red;
+}
+
+ .gamelist-table {
+
+  width: 1500px;
+
+}
+ 
+ .gamelist-table td{
+  
+  padding: 10px;
+  text-align: left;
+  border: 1px solid;
+  
+}
+
+.gamelist-table th{
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border: 1px solid;
+
+}
+#image-Header{
+  width:100px;
+}
+
+
+
+.arrow-container {
+  float:left;
+  width:100%;
+
+}
+.arrow-container button {
+
+
+}
+
+
+  /* login */
+  
+  .login-form,label{
+    text-align: left;
+}
+
+
+ .login-form{
+   padding: 50px;
+   border-radius: 25px;
+   background-color: 	#262f39;
+
+   width: 600px;
+   margin: 0 auto;
+   color: white;
+  
+   
+}
+
+/* game details */
+
+.gameDetails-form{
+  padding: 50px;
+  border-radius: 25px;
+  background-color: 	#262f39;
+
+  width: 1500px;
+  height: 700px;
+  margin: 0 auto;
+  color: white;
+ 
+  
+}
+.gameDetails-imagebox{
+  
+  width: 325px;
+  height: 325px;
+  left: 10px;
+  
+  background-color: #363945;
+
+}
+.gameDetails-imagebox img{
+
+  max-width: 100%;
+  max-height: 100%;
+
+}
+
+.gameDetails-main label{
+  font-weight: bold;
+
+}
+
+
+
+
+
