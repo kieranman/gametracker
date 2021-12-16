@@ -10,6 +10,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import GameDetails from './components/GameDetails';
 import AddToList from './components/AddToList';
+import UserList from './components/UserList';
 
 function App() {
 
@@ -60,6 +61,7 @@ function App() {
         <Route path='/signup' exact component = {SignUp}/>
         <Route path='/gameDetails/:id' exact component = {GameDetails}/>
         <Route path='/addToList/:id' exact component = {AddToList}/>
+        <Route path='/userlist' exact component = {UserList}/>
 
         
 

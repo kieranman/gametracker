@@ -58,7 +58,7 @@ class Navigation extends React.Component{
             {currentUser ? (
 
               <li className="nav_items">
-                <Link to={"/profile"} className="navbar_links">
+                <Link to={"/userlist"} className="navbar_links">
                   {currentUser.username}
                 </Link>
               </li>

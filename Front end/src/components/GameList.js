@@ -15,7 +15,7 @@ class GameList extends React.Component{
         this.state ={
             games :[],
             currentPage:1,
-            gamesPerPage:7
+            gamesPerPage:5
         };
     }
 
@@ -28,13 +28,13 @@ class GameList extends React.Component{
     }
 
 
-    firstPage =()=>{
-        if(this.state.currentPage>1){
-            this.setState({
-                currentPage:1
-            });
-        }
-    };
+    // firstPage =()=>{
+    //     if(this.state.currentPage>1){
+    //         this.setState({
+    //             currentPage:1
+    //         });
+    //     }
+    // };
 
     previousPage =() => {
         if(this.state.currentPage >1){
@@ -44,13 +44,13 @@ class GameList extends React.Component{
         }
     };
 
-    lastPage =() =>{
-        if (this.state.currentPage < Math.ceil(this.state.games.length/this.state.gamesPerPage)){
-            this.setState({
-                currentPage:Math.ceil(this.state.games.length/this.state.gamesPerPage)
-            });
-        }
-    };
+    // lastPage =() =>{
+    //     if (this.state.currentPage < Math.ceil(this.state.games.length/this.state.gamesPerPage)){
+    //         this.setState({
+    //             currentPage:Math.ceil(this.state.games.length/this.state.gamesPerPage)
+    //         });
+    //     }
+    // };
 
     nextPage =() =>{
         if (this.state.currentPage < Math.ceil(this.state.games.length/this.state.gamesPerPage)){

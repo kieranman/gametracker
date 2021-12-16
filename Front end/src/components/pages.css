@@ -157,6 +157,16 @@ Footer */
   width:100px;
 }
 
+#title-Header{
+  width:300px;
+}
+
+#rating-Header{
+  width:75px;
+}
+#status-Header{
+  width:150px;
+}
 
 
 .arrow-container {
