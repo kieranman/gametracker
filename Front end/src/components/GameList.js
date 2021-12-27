@@ -3,6 +3,7 @@ import {Form,Button,Card} from 'react-bootstrap';
 import './pages.css';
 import axios from 'axios';
 import pokemonImage from './pokemon.jpg'
+import edit from '../images/edit.png'
 import {
 
     Link
@@ -117,12 +118,12 @@ class GameList extends React.Component{
                        <td id = "image-Header"> <img src={game.photoURL} roundedCircle width="100px" height="100px"/></td>
                         <td><li><Link className ="navbar_links" to= {"gameDetails/"+game.id}>{game.title} </Link></li></td>
                         
-                        <td></td>
+                        <td>{game.score}</td>
                         <td></td>
                         <td></td>
                         
 
-                        <button id="edit-button"> <Link to={"edit/"+game.id}>Edit</Link></button>
+                        <button id = "edit-button"> <Link to={"edit/"+game.id}><img src={edit} id ="edit-image"></img></Link></button>
                         <button id = "delete-button" onClick={this.deleteGame.bind(this,game.id)}>Delete</button>
 
 

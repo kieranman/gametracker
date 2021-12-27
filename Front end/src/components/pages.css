@@ -124,10 +124,16 @@ Footer */
     color: white;
  }
  
+ #edit-image{
+  width: 50px;
+  height:50px;
+ }
 
 
 #edit-button{
-  background-color: chartreuse;
+  background-color: #262f39;
+  outline: none !important;
+  outline-offset: none !important;
 }
 #delete-button{
   background-color: red;
