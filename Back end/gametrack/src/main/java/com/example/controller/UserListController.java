@@ -1,7 +1,11 @@
 package com.example.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,18 +97,88 @@ public class UserListController {
 			List<UserList> body = userListRepository.findAllByUserIdOrderByRatingDesc(userId);
 			return body;
 	
-			
-			
-			
-			
-//			List<GameDto> games = new ArrayList<GameDto>();
-//			for (UserList userList : body) {
-//				
-//		       
-//				games.add(GameService.getDtoFromGame(userList.getGame()));
-//			}
-//			
-//			return new ResponseEntity<List<GameDto>>(games,HttpStatus.OK);
+
 	}	
+	
+	
+	
+	@GetMapping("/recommendations/{token}")
+	public Set<String> getRecommendations(@PathVariable("token") String token){
+		
+			// gets user id from token
+			String username = jwtUtils.getUserNameFromJwtToken(token);
+			User user = userRepository.findByUsername(username)
+					.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+			Long userId = user.getId();
+		
+			
+			List<UserList> userCompleted = userListRepository.findByStatusAndUserId("Completed",userId);
+			Record bestMatcherUser = null;
+			Integer bestScore = 0;
+			
+			Set<String> otherUserCompleted = new HashSet<>();
+			
+			List<UserList> allCompleted = userListRepository.findByStatus("Completed");
+
+			for (UserList a: allCompleted) {
+				if(a.getUser().getId()!=userId) {
+					for(UserList b: userCompleted) {
+						if(a.getGame().getTitle()==b.getGame().getTitle()) { 
+							otherUserCompleted.add(a.getUser().getUsername());
+						}
+					}
+				}
+			}
+			return otherUserCompleted;
+			
+	
+
+	}	
+	
+	
+	
+	private Set<String> getAllSimmilarUsers(Long userId) {
+		
+		// gets games completed by target user
+		List<UserList> userCompleted = userListRepository.findByStatusAndUserId("Completed",userId);
+		// gets completed games of all users
+		List<UserList> allCompleted = userListRepository.findByStatus("Completed");
+		
+		Set<String> otherUserCompleted = new HashSet<>();
+
+		
+		// for each game in all completed games
+		// checks if a user other than target user has completed it
+		for(UserList a : allCompleted) {
+			if(a.getUser().getId()!=userId) {
+				
+				for(UserList b: userCompleted) {
+					if(a.getGame().getTitle()==b.getGame().getTitle()) { 
+						otherUserCompleted.add(a.getUser().getUsername());
+					}
+				}
+			}
+		}
+		
+		return otherUserCompleted;
+	}
+	
+	
+	private double cosineSimmilarity(Long userId,Long simmilarUserId) {
+		
+		
+		
+		
+		
+		
+		
+		
+		return 0;
+		
+	}
+	
+
+
+	
 	
 }

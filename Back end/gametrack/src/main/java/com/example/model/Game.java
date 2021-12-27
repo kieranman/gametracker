@@ -49,6 +49,11 @@ public class Game {
 	@Column(name="genre4")
 	private String genre4;
 	
+	@Column(name="avgScore")
+	private Double score;
+	
+
+	
 	@Column(name="synopsis", columnDefinition = "LONGTEXT")
 	private String synopsis;
 	
@@ -62,7 +67,7 @@ public class Game {
 	}
 
 
-	public Game(String title, String synopsis,String photoURL,String genre1,String genre2,String genre3,String genre4) {
+	public Game(String title, String synopsis,String photoURL,String genre1,String genre2,String genre3,String genre4,Double score) {
 		super();
 		this.title = title;
 		this.synopsis = synopsis;
@@ -71,10 +76,21 @@ public class Game {
 		this.genre2 =genre2;
 		this.genre3 = genre3;
 		this.genre4 = genre4;
+		this.score = score;
 	}
 	
 	
 
+
+
+	public Double getScore() {
+		return score;
+	}
+
+
+	public void setScore(Double score) {
+		this.score = score;
+	}
 
 
 	public Long getId() {

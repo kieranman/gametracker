@@ -1,4 +1,5 @@
 package com.example.controller;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,13 +26,16 @@ import com.example.model.ERole;
 import com.example.model.Game;
 import com.example.model.Role;
 import com.example.model.User;
-//import com.example.model.UserList;
+import com.example.model.UserList;
+import com.example.model.UserList;
 import com.example.payload.request.SignupRequest;
 import com.example.payload.request.UserListRequest;
+import com.example.payload.response.GameResponse;
+import com.example.payload.response.JwtResponse;
 import com.example.payload.response.MessageResponse;
 import com.example.repository.GameRepository;
 import com.example.repository.UserRepository;
-//import com.example.repository.UserListRepository;
+import com.example.repository.UserListRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -44,36 +48,68 @@ public class GameController {
 		@Autowired
 		private UserRepository userRepository;
 		
-//		@Autowired
-//		private UserListRepository userListRepository;
-////		
-//		
-//		@PostMapping("/userlist")
-//		public UserList addToList(@RequestBody UserList userlist) {
-//			return userListRepository.save(userlist);
-//	}
-//		@GetMapping("/userlist")
-//		public List<UserList> getUserList(){
-//			return this.userListRepository.findAll();
-//		}
-		
-		
-		
-		
-		
+		@Autowired
+		private UserListRepository userListRepository;
 
-
-		
-		
-		
-		
-		
 
 		//get games 
 		@GetMapping("/games")
 		public List<Game> getGames(){
+			getGameRating();
 			return this.gameRepository.findAll();
 		}
+		
+		
+		
+		
+		
+		
+		// sets the average rating
+		public void getGameRating(){
+			List<Game> allGames = gameRepository.findAll();
+			for (Game a : allGames) {
+				a.setScore(getAverageScore(a.getId()));
+			}
+			gameRepository.saveAll(allGames);
+	
+		}
+		
+		private double getAverageScore(Long gameId) {
+			
+			
+			ArrayList<String> avgRating = new ArrayList<String>(); // Create an ArrayList object
+			List<UserList> allRatings = userListRepository.findAllByGameId(gameId);
+			
+			if (allRatings.isEmpty()) {
+				return 0;
+			}
+			
+			double sumRatings = 0;
+			for(UserList a : allRatings) {
+
+					if (a.getRating()!=null){
+						
+						sumRatings+= a.getRating();
+					}
+
+					
+
+				
+			}
+
+			
+		
+			
+			double averageRating = sumRatings/allRatings.size();
+			return averageRating;
+		}
+		
+		
+		
+//		@GetMapping("/games/globalrating")
+//		public List<Game> getGameRating(){
+//			return this.gameRepository.findAll();
+//		}
 		
 
 		
@@ -122,25 +158,5 @@ public class GameController {
 			return ResponseEntity.ok(response);
 			
 		}
-		
-		
-		
-		
-		
-
-		
-		
-		
-
-		
-
-		
-		
-		
-		
 		}
-
-
-	
-	
 

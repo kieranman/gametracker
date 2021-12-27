@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			
 			//Allows the game controller endpoints
 			.antMatchers("/games").permitAll()
+			.antMatchers("/games/gameRating/{id}").permitAll()
 			.antMatchers("/userlist").permitAll()
 			.antMatchers("/games/{id}").permitAll()
 			.antMatchers("/userlist/**").permitAll()
