@@ -15,4 +15,10 @@ public interface GameRepository extends JpaRepository<Game,Long> {
 
 	List<Game> findAllById(Long id);
 	
+	List<Game> findAllByTitleContaining(String title);
+	
+	List<Game> findAllByGenre1OrGenre2OrGenre3OrGenre4(String genre1,String genre2, String genre3, String genre4);
+	
+
+	
 }

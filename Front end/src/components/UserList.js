@@ -105,9 +105,9 @@ changePage = event => {
                   
                  <td id = "image-Header"> <img src={userlist.game.photoURL} roundedCircle width="100px" height="100px"/></td>
                   <td id = "title-Header"><li><Link className ="navbar_links" to= {"gameDetails/"+userlist.game.id}>{userlist.game.title} </Link></li></td>
-                  <td id = "rating-Header">{userlist.rating}</td>
-                  <td id = "status-Header">{userlist.status}</td>
-                  <td id = "review-Header">{userlist.review}</td>
+                  <td ><div className = "rating-Header">{userlist.rating}</div></td>
+                  <td><div className = "status-Header">{userlist.status}</div></td>
+                  <td ><div className = "review-Header">{userlist.review}</div></td>
                   
 
 

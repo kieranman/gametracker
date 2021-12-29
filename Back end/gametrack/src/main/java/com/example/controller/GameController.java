@@ -28,7 +28,9 @@ import com.example.model.Role;
 import com.example.model.User;
 import com.example.model.UserList;
 import com.example.model.UserList;
+import com.example.payload.request.GenreRequest;
 import com.example.payload.request.SignupRequest;
+import com.example.payload.request.TitleRequest;
 import com.example.payload.request.UserListRequest;
 import com.example.payload.response.GameResponse;
 import com.example.payload.response.JwtResponse;
@@ -52,7 +54,28 @@ public class GameController {
 		private UserListRepository userListRepository;
 
 
-		//get games 
+		
+		
+		
+		//Search by game title
+		@GetMapping("/games/title/{title}")
+		public List<Game> getGameByTitle(@PathVariable String title){
+			List<Game> matchedTitles = gameRepository.findAllByTitleContaining(title);
+			return matchedTitles;
+		}
+		//Search by game title
+		@GetMapping("/games/genre")
+		public List<Game> getGameByGenre(@RequestBody GenreRequest genreRequest){
+			List<Game> matchedGenres = gameRepository.findAllByGenre1OrGenre2OrGenre3OrGenre4(genreRequest.getGenre(), genreRequest.getGenre(),
+					genreRequest.getGenre(), genreRequest.getGenre());
+
+			return matchedGenres;
+		}
+		
+		
+		
+		
+		//get games  + gets the average score of the game
 		@GetMapping("/games")
 		public List<Game> getGames(){
 			getGameRating();
@@ -86,30 +109,15 @@ public class GameController {
 			
 			double sumRatings = 0;
 			for(UserList a : allRatings) {
-
-					if (a.getRating()!=null){
-						
+					if (a.getRating()!=null){						
 						sumRatings+= a.getRating();
 					}
-
-					
-
-				
 			}
 
-			
-		
-			
 			double averageRating = sumRatings/allRatings.size();
-			return averageRating;
+			double roundOff = Math.round(averageRating * 100.0) / 100.0;
+			return roundOff ;
 		}
-		
-		
-		
-//		@GetMapping("/games/globalrating")
-//		public List<Game> getGameRating(){
-//			return this.gameRepository.findAll();
-//		}
 		
 
 		
@@ -129,7 +137,7 @@ public class GameController {
 		
 		}
 		
-		//update
+		//update game details
 		@PutMapping("/games/{id}")
 		public ResponseEntity<Game> updateGame(@PathVariable Long id,@RequestBody Game gameDetails){
 			Game game = gameRepository.findById(id)

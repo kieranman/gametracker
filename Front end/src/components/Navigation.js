@@ -66,16 +66,19 @@ class Navigation extends React.Component{
             <div>
             </div>
           )}
-           
+
            
             
-   
+
           
+
+
 
 
     
 
           </ul>
+          
 </navbar>
 
 

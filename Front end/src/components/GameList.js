@@ -1,32 +1,71 @@
 import React from 'react';
-import {Form,Button,Card} from 'react-bootstrap';
 import './pages.css';
 import axios from 'axios';
 import pokemonImage from './pokemon.jpg'
-import edit from '../images/edit.png'
+import bin from '../images/bin.png';
+import edit from '../images/edit.png';
+import GameService from '../services/GameService';
+
 import {
 
     Link
       } from "react-router-dom";
+import { Form } from 'react-bootstrap';
     
     
 class GameList extends React.Component{
     constructor(props){
         super(props);
+        this.onChangeSearch = this.onChangeSearch.bind(this);
+        this.submitForm = this.submitForm.bind(this);
         this.state ={
             games :[],
             currentPage:1,
-            gamesPerPage:5
+            gamesPerPage:4,
+            search:this.props.match.params.search
         };
     }
 
     componentDidMount(){
-        axios.get("http://localhost:8080/games")
+
+        if(this.state.search){
+            axios.get("http://localhost:8080/games/title/"+this.state.search)
+            .then(response=>response.data)
+            .then((data)=>{
+                this.setState({games:data})
+                
+                
+            });
+        
+        }
+        else{
+            axios.get("http://localhost:8080/games")
             .then(response=>response.data)
             .then((data)=>{
                 this.setState({games:data})
             });
+        }
+
+        
+        
+
+
+
     }
+
+
+    onChangeSearch(e) {
+        this.setState({
+          search: e.target.value
+        });
+      }
+
+      submitForm(e){
+        e.preventDefault(); 
+        this.props.history.push(`/list/${this.state.search}`);
+        window.location.reload();
+
+    };
 
 
     // firstPage =()=>{
@@ -71,6 +110,7 @@ class GameList extends React.Component{
     };
 
 
+    
 
 
     deleteGame =(gameId)=>{
@@ -84,6 +124,10 @@ class GameList extends React.Component{
         })
     }
 
+
+
+
+
     render(){
         const {games,currentPage,gamesPerPage} = this.state;
         const lastIndex = currentPage * gamesPerPage;
@@ -93,18 +137,46 @@ class GameList extends React.Component{
 
 
         return(
+
             <div className ="gamelist-box">
+{/* {this.state.games.map(
+    game =>  
+
+    <div className ="card-container">
+        <button id = "edit-button"> <Link to={"edit/"+game.id}><img src={edit} id ="edit-image"></img></Link></button>
+        <div className="card-score">{game.score}
+        <button id = "delete-button" onClick={this.deleteGame.bind(this,game.id)}>Delete</button>
+        </div>
+        <div className="card-image">
+            <img src={game.photoURL}/>
+        </div>
+        <div className="card-title">
+        <li><Link className ="navbar_links" to= {"gameDetails/"+game.id}>{game.title} </Link></li>
+        </div>
+    </div>
+
+           
+)
+} */}
+
+    <form onSubmit={this.submitForm}>
+           <input id="search-bar"  type="text" placeholder="Search.." name="search"
+           value={this.state.search} onChange={this.onChangeSearch}
+           />
+           <input id="search-submit" type="submit"  value="Submit"/>
+    </form>
+
 
                   <table className ="gamelist-table" >
             <thead>
                 <tr>
 
-                <th>Image</th>
-                <th>Title</th>
+                <th></th>
+                <th></th>
+                <th></th>
                 
-                <th>Score</th>
-                <th>Your Score</th>
-                <th>Status</th>
+
+
                 </tr>
             </thead>
             <tbody>
@@ -116,15 +188,18 @@ class GameList extends React.Component{
 
                         
                        <td id = "image-Header"> <img src={game.photoURL} roundedCircle width="100px" height="100px"/></td>
-                        <td><li><Link className ="navbar_links" to= {"gameDetails/"+game.id}>{game.title} </Link></li></td>
+                       <td><div className = "score-box">{game.score}</div></td>
+                        <td>
+                            <li><Link className ="navbar_links" to= {"gameDetails/"+game.id}>{game.title}</Link></li>
+                            
+                            </td>
+                      
                         
-                        <td>{game.score}</td>
-                        <td></td>
-                        <td></td>
                         
 
                         <button id = "edit-button"> <Link to={"edit/"+game.id}><img src={edit} id ="edit-image"></img></Link></button>
-                        <button id = "delete-button" onClick={this.deleteGame.bind(this,game.id)}>Delete</button>
+                        <button id = "delete-button" onClick={this.deleteGame.bind(this,game.id)}><img src ={bin} id ="delete-image"/></button>
+
 
 
 

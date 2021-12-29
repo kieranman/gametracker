@@ -4,7 +4,7 @@ welcome  */
 
 .welcome-container{
     border-radius: 25px;
-    background-color: 	#262f39;
+    background-color:#363945;
     height: 300px;
     width: 1600px;
     margin: 0 auto;
@@ -33,13 +33,15 @@ navbar */
   ul {
     list-style-type: none;
     margin: 0;
-    padding: 10px;
+    padding: 30px;
     overflow: hidden;
-    background-color: 	#262f39;
+    background-color:#363945;
+    
   }
   li {
     float: left;
     list-style-type: none;
+    
   }
 
   li a:hover {
@@ -47,7 +49,25 @@ navbar */
     color:#646e83
   }
 
+  .search-container{
+    width:250px;
+    padding-top:0px;
+    height:50px;
+    margin-right:5px;
+    display:inline-block;
+  }
 
+  #search-bar{
+    height:30px;
+    width:250px;
+
+    display:inline-block;
+  }
+
+  #search-submit{
+
+    display:inline-block;
+  }
 
 
 
@@ -77,7 +97,7 @@ navbar */
   .addgame-form{
     padding: 50px;
     border-radius: 25px;
-    background-color: 	#262f39;
+    background-color:#363945;
 
     width: 1600px;
     margin: 0 auto;
@@ -103,7 +123,7 @@ Footer */
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: 	#262f39;
+    background-color:#363945;
     color: white;
     text-align: center;
     padding:1px;
@@ -117,11 +137,11 @@ Footer */
  .gamelist-box{
     padding: 50px;
     border-radius: 25px;
-    background-color: 	#262f39;
     width: 1600px;
-    height:800px;
+    height:700px;
     margin: 0 auto;
-    color: white;
+    background-color:#363945;
+    color: #363945;
  }
  
  #edit-image{
@@ -129,14 +149,33 @@ Footer */
   height:50px;
  }
 
+ #delete-image{
+  width: 50px;
+  height:50px;
+ }
 
 #edit-button{
-  background-color: #262f39;
-  outline: none !important;
-  outline-offset: none !important;
+  background-color:#363945;
+
+  border: none;
+  cursor: pointer;
+  outline: none;
+  margin: auto;
+  display: block;
+  float:right;
+  padding-right: 0px;
+  margin-top:22px;
 }
 #delete-button{
-  background-color: red;
+  background-color:#363945;
+  height:100px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  margin: auto;
+  display: block;
+  float:right;
+  margin-right:5px;
 }
 
  .gamelist-table {
@@ -148,8 +187,11 @@ Footer */
  .gamelist-table td{
   
   padding: 10px;
-  text-align: left;
+  text-align: center;
   border: 1px solid;
+
+  font-size: 150%;
+
   
 }
 
@@ -157,23 +199,40 @@ Footer */
   padding-top: 12px;
   padding-bottom: 12px;
   border: 1px solid;
+  
+
+}
+
+.score-box{
+  color:#6495ED
+
 
 }
 #image-Header{
   width:100px;
+
 }
 
 #title-Header{
   width:300px;
+
 }
 
-#rating-Header{
+.rating-Header{
   width:75px;
+  color:white;
 }
-#status-Header{
+.status-Header{
   width:150px;
+  color:white;
+
 }
 
+.review-Header{
+  width:150px;
+  color:white;
+
+}
 
 .arrow-container {
   float:left;
@@ -186,6 +245,25 @@ Footer */
 }
 
 
+
+
+
+.card-container{
+  width: 300px;
+  overflow:hidden;
+  box-shadow: 0px 0px 8px -5px;
+  float:left;
+}
+
+
+.card-image img{
+  overflow:hidden;
+  height:200px;
+
+}
+
+
+
   /* login */
   
   .login-form,label{
@@ -196,7 +274,7 @@ Footer */
  .login-form{
    padding: 50px;
    border-radius: 25px;
-   background-color: 	#262f39;
+   background-color:#363945;
 
    width: 600px;
    margin: 0 auto;
@@ -210,7 +288,7 @@ Footer */
 .gameDetails-form{
   padding: 50px;
   border-radius: 25px;
-  background-color: 	#262f39;
+  background-color:#363945;
 
   width: 1500px;
   height: 700px;
@@ -225,7 +303,7 @@ Footer */
   height: 325px;
   left: 10px;
   
-  background-color: #363945;
+  background-color:#363945;
 
 }
 .gameDetails-imagebox img{

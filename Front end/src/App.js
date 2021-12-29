@@ -12,6 +12,9 @@ import GameDetails from './components/GameDetails';
 import AddToList from './components/AddToList';
 import UserList from './components/UserList';
 
+
+
+
 function App() {
 
 
@@ -48,6 +51,7 @@ function App() {
     <div className="background">
     <Router>
       <Navigation/>
+
     <div className="App" style ={marginTop}>
         
           
@@ -56,13 +60,14 @@ function App() {
         <Route path='/' exact component = {Welcome} />
         <Route path='/add' exact component = {Game}/>
         <Route path='/edit/:id' exact component = {Game}/>
+        <Route path='/list/:search' exact component = {GameList}/>
         <Route path='/list' exact component = {GameList}/>
         <Route path='/login' exact component = {Login}/>
         <Route path='/signup' exact component = {SignUp}/>
         <Route path='/gameDetails/:id' exact component = {GameDetails}/>
         <Route path='/addToList/:id' exact component = {AddToList}/>
         <Route path='/userlist' exact component = {UserList}/>
-
+  
         
 
       </Switch>

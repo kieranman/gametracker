@@ -89,6 +89,11 @@ public class UserListController {
 	
 	@GetMapping("/{token}")
 	public List<UserList> getUserList(@PathVariable("token") String token){
+			
+			boolean validToken = jwtUtils.validateJwtToken(token);
+			if (validToken == false) {
+//				return ResponseEntity.ok(new MessageResponse("Invalid Token!"));
+			}
 			String username = jwtUtils.getUserNameFromJwtToken(token);
 			
 			User user = userRepository.findByUsername(username)

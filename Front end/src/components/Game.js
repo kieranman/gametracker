@@ -109,6 +109,7 @@ class Game extends React.Component{
 
     gameList=()=>{
         this.props.history.push('/list');
+        window.location.reload();
     }
 
 
