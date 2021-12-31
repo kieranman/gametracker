@@ -61,6 +61,7 @@ function App() {
         <Route path='/add' exact component = {Game}/>
         <Route path='/edit/:id' exact component = {Game}/>
         <Route path='/list/:search' exact component = {GameList}/>
+        <Route path='/list/genre/:genre' exact component = {GameList}/>
         <Route path='/list' exact component = {GameList}/>
         <Route path='/login' exact component = {Login}/>
         <Route path='/signup' exact component = {SignUp}/>

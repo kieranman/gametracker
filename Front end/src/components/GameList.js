@@ -14,17 +14,33 @@ import { Form } from 'react-bootstrap';
     
     
 class GameList extends React.Component{
+
+    
     constructor(props){
         super(props);
         this.onChangeSearch = this.onChangeSearch.bind(this);
         this.submitForm = this.submitForm.bind(this);
+
+
+
         this.state ={
             games :[],
             currentPage:1,
             gamesPerPage:4,
-            search:this.props.match.params.search
+            search:this.props.match.params.search,
+            genre:this.props.match.params.genre
         };
+
+        function selectGenre(e) {
+            const genre = e.target.value;
+            this.setState({
+                genre:genre
+            })
+        
+          }
+
     }
+    
 
     componentDidMount(){
 
@@ -38,6 +54,17 @@ class GameList extends React.Component{
             });
         
         }
+        else if(this.state.genre){
+            axios.get("http://localhost:8080/games/genre/"+this.state.genre)
+            .then(response=>response.data)
+            .then((data)=>{
+                this.setState({games:data})
+                
+            });
+
+        }
+
+        
         else{
             axios.get("http://localhost:8080/games")
             .then(response=>response.data)
@@ -66,6 +93,11 @@ class GameList extends React.Component{
         window.location.reload();
 
     };
+
+
+
+
+
 
 
     // firstPage =()=>{
@@ -128,6 +160,8 @@ class GameList extends React.Component{
 
 
 
+
+
     render(){
         const {games,currentPage,gamesPerPage} = this.state;
         const lastIndex = currentPage * gamesPerPage;
@@ -160,11 +194,23 @@ class GameList extends React.Component{
 } */}
 
     <form onSubmit={this.submitForm}>
+
+    <li><Link className ="navbar_links"   onClick={() => {window.location.href='/list/genre/action'}}>Action</Link></li>
+    <li><Link className ="navbar_links"   onClick={() => {window.location.href='/list/genre/turn-based'}}>Turn-Based</Link></li>
+    <li><Link className ="navbar_links"   onClick={() => {window.location.href='/list/genre/adventure'}}>Adventure</Link></li>
+    <li><Link className ="navbar_links"   onClick={() => {window.location.href='/list/genre/rpg'}}>RPG</Link></li>
+
+
+
+
+
            <input id="search-bar"  type="text" placeholder="Search.." name="search"
            value={this.state.search} onChange={this.onChangeSearch}
            />
+
            <input id="search-submit" type="submit"  value="Submit"/>
     </form>
+
 
 
                   <table className ="gamelist-table" >
@@ -190,7 +236,7 @@ class GameList extends React.Component{
                        <td id = "image-Header"> <img src={game.photoURL} roundedCircle width="100px" height="100px"/></td>
                        <td><div className = "score-box">{game.score}</div></td>
                         <td>
-                            <li><Link className ="navbar_links" to= {"gameDetails/"+game.id}>{game.title}</Link></li>
+                            <li><Link className ="navbar_links" to= {'/gameDetails/'+game.id}>{game.title}</Link></li>
                             
                             </td>
                       
