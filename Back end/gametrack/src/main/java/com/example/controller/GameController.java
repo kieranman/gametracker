@@ -64,11 +64,9 @@ public class GameController {
 			return matchedTitles;
 		}
 		//Search by game title
-		@GetMapping("/games/genre")
-		public List<Game> getGameByGenre(@RequestBody GenreRequest genreRequest){
-			List<Game> matchedGenres = gameRepository.findAllByGenre1OrGenre2OrGenre3OrGenre4(genreRequest.getGenre(), genreRequest.getGenre(),
-					genreRequest.getGenre(), genreRequest.getGenre());
-
+		@GetMapping("/games/genre/{genre}")
+		public List<Game> getGameByGenre(@PathVariable String genre){
+			List<Game> matchedGenres = gameRepository.findAllByGenre1OrGenre2OrGenre3OrGenre4(genre,genre,genre,genre);
 			return matchedGenres;
 		}
 		

@@ -107,80 +107,250 @@ public class UserListController {
 	
 	
 	
-	@GetMapping("/recommendations/{token}")
-	public Set<String> getRecommendations(@PathVariable("token") String token){
+	@GetMapping("/recommendations/{userId}")
+	public List<Game> getRecommendations(@PathVariable("userId") Long userId){
 		
-			// gets user id from token
-			String username = jwtUtils.getUserNameFromJwtToken(token);
-			User user = userRepository.findByUsername(username)
-					.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-			Long userId = user.getId();
+		// gets games completed by target user
+		List<UserList> userCompleted = userListRepository.findByStatusAndUserId("Completed",userId);
+		// gets completed games of all users
+		List<UserList> allCompleted = userListRepository.findByStatus("Completed");
+		//gets all users with intersection game lists
+		Set<Long>otherUserCompleted = getAllSimmilarUsers(userId,userCompleted,allCompleted);
+		List<String> combinedGameListArray =makeCombinedGameList( userCompleted, otherUserCompleted);
+		Double[] returnVector = vector2(userCompleted,otherUserCompleted,userId,combinedGameListArray);
 		
-			
-			List<UserList> userCompleted = userListRepository.findByStatusAndUserId("Completed",userId);
-			Record bestMatcherUser = null;
-			Integer bestScore = 0;
-			
-			Set<String> otherUserCompleted = new HashSet<>();
-			
-			List<UserList> allCompleted = userListRepository.findByStatus("Completed");
 
-			for (UserList a: allCompleted) {
-				if(a.getUser().getId()!=userId) {
-					for(UserList b: userCompleted) {
-						if(a.getGame().getTitle()==b.getGame().getTitle()) { 
-							otherUserCompleted.add(a.getUser().getUsername());
-						}
-					}
-				}
+
+		for (int i = 0; i < combinedGameListArray.size()-1; i++)    
+		     
+		    // Last i elements are already in place
+		    for (int j = 0; j < combinedGameListArray.size()-i-1; j++)
+		        if (returnVector[j] > returnVector[j+1]) {
+		    	    Double temp = returnVector[j];
+		    	    returnVector[j]= returnVector[j+1];
+		    	    returnVector[j+1] = temp;
+		    	    
+		    	    String temp2 = combinedGameListArray.get(j);
+		    	    combinedGameListArray.set(j,combinedGameListArray.get(j+1));
+		    	    combinedGameListArray.set(j+1,temp2);
+		        }
+		
+		List<String> top5Games = new ArrayList<>();
+		for(int i =0;i<5;i++) {
+			try {
+				top5Games.add(combinedGameListArray.get(combinedGameListArray.size()-i));
 			}
-			return otherUserCompleted;
+			catch(Exception e) {
+				// do nothing
+			}
+		}
+		
+		List<Game> getRecommendations = gameRepository.findByTitleIn(top5Games);		
+		
+		return getRecommendations ;
+
+		
+			
+	
 			
 	
 
 	}	
 	
 	
+//	private Long vector(List<UserList> userCompleted,Set<Long> otherUserCompleted) {
+//		
+//		
+//		// for each simmilar user
+//		// checks for matches and gets ratings on those games
+//		// but if target user has played game but simmilar user hasnt, it puts 0 as its rating
+//
+//		Long bestMatchId = null;
+//		double bestCosineValue =0;
+//		
+//		
+//		List<Long> getIndexFromSet = new ArrayList<>(otherUserCompleted);
+//		for (int i =0; i<otherUserCompleted.size();i++) {
+//			List<UserList> otherUserCompletedList = userListRepository.findByStatusAndUserId("Completed",getIndexFromSet.get(i));
+//			
+//			ArrayList<Integer> ratingVectorA = new ArrayList<Integer>(); 
+//			ArrayList<Integer> ratingVectorB = new ArrayList<Integer>(); 
+//			
+//			for(UserList a: userCompleted ) {
+//				ratingVectorA.add(a.getRating());
+//				for(UserList b: otherUserCompletedList ) {
+//					if (a.getGame().getTitle()==b.getGame().getTitle()) {
+//						ratingVectorB.add(b.getRating());
+//					}
+//
+//
+//				}
+//				if (ratingVectorA.size()>ratingVectorB.size()) {
+//					ratingVectorB.add(0);
+//				}
+
+			// calculate cosine simmilarity
+//			}
+//			
+//			double cosineValue = cosineSimmilarity(ratingVectorA,ratingVectorB);
+//			if (i==0) {
+//				bestCosineValue =cosineValue;
+//				bestMatchId = getIndexFromSet.get(i);
+//			}
+//			else {
+//				if (cosineValue>bestCosineValue) {
+//					bestCosineValue = cosineValue;
+//					bestMatchId = getIndexFromSet.get(i);
+//				}
+//				
+//			}
+//
+//		}
+//		return bestMatchId;
+//	}
 	
-	private Set<String> getAllSimmilarUsers(Long userId) {
+	
+	
+	
+	
+	private List<String> makeCombinedGameList(List<UserList> userCompleted,Set<Long> otherUserCompleted) {
+		List<Long> getIndexFromSet = new ArrayList<>(otherUserCompleted);
+		Set<String> combinedGameList = new HashSet();
+		for (int i=0;i<getIndexFromSet.size();i++) {
+			List<UserList> otherUserCompletedList = userListRepository.findByStatusAndUserId("Completed",getIndexFromSet.get(i));
+			for (UserList a:otherUserCompletedList) {
+				combinedGameList.add(a.getGame().getTitle());
+			}
+			
+		}
+		List<String> combinedGameListArray = new ArrayList<>(combinedGameList);
 		
-		// gets games completed by target user
-		List<UserList> userCompleted = userListRepository.findByStatusAndUserId("Completed",userId);
-		// gets completed games of all users
-		List<UserList> allCompleted = userListRepository.findByStatus("Completed");
+		return combinedGameListArray;
+	}
+	
+	
+	
+	
+
+	
+	private Double[] vector2(List<UserList> userCompleted,Set<Long> otherUserCompleted,Long userId,List<String> combinedGameListArray) {
 		
-		Set<String> otherUserCompleted = new HashSet<>();
+		
+		// for each simmilar user
+		// checks for matches and gets ratings on those games
+		// but if target user has played game but simmilar user hasnt, it puts 0 as its rating
+
+
+
+		
+
+		Double weightedRating [] = new Double[combinedGameListArray.size()];;
+		Double sumOfCosine = 0.0;
+		
+		List<Long> getIndexFromSet = new ArrayList<>(otherUserCompleted);
+		for (int i=0;i<getIndexFromSet.size();i++) {
+			
+			List<Integer> UserRatings = new ArrayList<Integer>();
+			List<Integer> otherUserRating =  new ArrayList<Integer>();
+			
+			List<UserList> otherUserCompletedList = userListRepository.findByStatusAndUserId("Completed",getIndexFromSet.get(i));
+			for (int j =0;j<combinedGameListArray.size();j++) {
+				for (UserList a: userCompleted) {
+					if(a.getGame().getTitle()==combinedGameListArray.get(j)) {
+						UserRatings.add(a.getRating());
+					}
+				}
+
+				if (userListRepository.existsByUserIdAndGameTitle(userId,combinedGameListArray.get(j))== false){
+					UserRatings.add(0);
+				}
+				
+				for (UserList a: otherUserCompletedList) {
+					if(a.getGame().getTitle()==combinedGameListArray.get(j)) {
+						otherUserRating.add(a.getRating());
+					}
+				}
+				if (userListRepository.existsByUserIdAndGameTitle(getIndexFromSet.get(i),combinedGameListArray.get(j))== false){
+					otherUserRating.add(0);
+				}
+			}
+			
+			
+			Double cosineValue = cosineSimmilarity(UserRatings,otherUserRating);
+				if (cosineValue<0.99) {
+					for (int j =0;j<combinedGameListArray.size();j++) {
+						Double otherUserRatingDouble = new Double(otherUserRating.get(j));//first way  
+						if (weightedRating[j]==null) {
+							weightedRating[j]=cosineValue* otherUserRatingDouble;
+						}
+						else {weightedRating[j]+=cosineValue* otherUserRatingDouble;}
+						
+						
+					}
+					sumOfCosine+=cosineValue;
+				}
+
+			
+
+			
+			
+
+			
+			
+			
+
+			
+		}
+		for (int j =0;j<combinedGameListArray.size();j++) {
+			weightedRating[j]=weightedRating[j]/sumOfCosine;
+			
+			
+		}
+		return weightedRating;
+
+
+	}
+	
+	
+	private Double cosineSimmilarity(List<Integer> userRatings,List<Integer> otherUserRating) {
+	    double dotProduct = 0.0;
+	    double normA = 0.0;
+	    double normB = 0.0;
+	    for (int i = 0; i < userRatings.size(); i++) {
+	        dotProduct += userRatings.get(i) * otherUserRating.get(i);
+	        normA += Math.pow(userRatings.get(i), 2);
+	        normB += Math.pow(otherUserRating.get(i), 2);
+	    }   
+	    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+	}
+	
+	
+	
+	private Set<Long> getAllSimmilarUsers(Long userId , List<UserList> userCompleted , List<UserList> allCompleted) {
+		
+		Set<Long> otherUserCompleted = new HashSet<>();
 
 		
 		// for each game in all completed games
 		// checks if a user other than target user has completed it
+	
 		for(UserList a : allCompleted) {
-			if(a.getUser().getId()!=userId) {
+
+
 				
 				for(UserList b: userCompleted) {
 					if(a.getGame().getTitle()==b.getGame().getTitle()) { 
-						otherUserCompleted.add(a.getUser().getUsername());
+						otherUserCompleted.add(a.getUser().getId());
 					}
+
 				}
-			}
 		}
 		
 		return otherUserCompleted;
 	}
 	
 	
-	private double cosineSimmilarity(Long userId,Long simmilarUserId) {
-		
-		
-		
-		
-		
-		
-		
-		
-		return 0;
-		
-	}
+
 	
 
 

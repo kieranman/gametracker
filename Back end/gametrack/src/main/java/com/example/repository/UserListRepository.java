@@ -21,5 +21,6 @@ public interface UserListRepository extends JpaRepository<UserList,Long> {
 	
 	List<UserList> findByStatus(String status);
 	
-	
+	Boolean existsByUserIdAndGameTitle(Long userId,String title);
+
 }
