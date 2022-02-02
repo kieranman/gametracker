@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import './pages.css';
+import {Button} from 'react-bootstrap';
+
 class Game extends React.Component{
     constructor(props){
         super(props);
@@ -123,13 +125,13 @@ class Game extends React.Component{
                 <form onReset={this.cancelGame} onSubmit={this.state.id? this.updateGame:this.submitGame} id="gameFormId">
 
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title" placeholder="Enter game title.."
+                <input className="login-input" type="text" id="title" name="title" placeholder="Enter game title.."
                 value ={title} onChange={this.gameChange} />
                 <label for="photo">Cover Photo URL</label>
-                <input type="text" id="photoURL" name="photoURL" placeholder="Enter game cover photo url.."
+                <input className="login-input" type="text" id="photoURL" name="photoURL" placeholder="Enter game cover photo url.."
                 value ={photoURL} onChange={this.gameChange}/>
                 <label for="synopsis">Synopsis</label>
-                <input type="text" id="synopsis" name="synopsis" placeholder="Enter game description.."
+                <input className="login-input" type="text" id="synopsis" name="synopsis" placeholder="Enter game description.."
                 value ={synopsis} onChange={this.gameChange}/>
 
                 <label for="genre">Genre</label><br/>
@@ -193,8 +195,11 @@ class Game extends React.Component{
                     <option value="sports">Sports</option>
                     <option value="moba">MOBA</option>
                 </select><br/>
-                    <input  type="submit" value="Submit"/>
-                    <input type="reset" value="Reset"/>
+                <br/>
+                    <Button  className="mt-auto font-weight-bold"
+                                variant ="secondary" type="submit" value="Submit">Submit</Button>
+                    <Button className="mt-auto font-weight-bold"
+                                variant ="secondary" type="reset" value="Reset">Reset</Button>
 
 
                 </form>

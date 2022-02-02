@@ -54,10 +54,10 @@ export default class Login extends React.Component {
             <form onSubmit={this.handleLogin}>
 
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter Username.."
+            <input type="text" className="login-input" name="username" placeholder="Enter Username.."
             value ={this.state.username} onChange={this.onChangeUsername} />
             <label for="password">Password</label>
-            <input type="text" id="password" name="password" placeholder="Enter Password.."
+            <input type="text" className="login-input" name="password" placeholder="Enter Password.."
             value ={this.state.password} onChange={this.onChangePassword}/>
                 <input  type="submit" value="Submit"/>
                 <input type="reset" value="Reset"/>

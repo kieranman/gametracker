@@ -13,7 +13,8 @@ class Navigation extends React.Component{
 
 
     this.state = {
-      currentUser: undefined
+      currentUser: undefined,
+      showAdminBoard: false
     };
   }
 
@@ -22,6 +23,7 @@ class Navigation extends React.Component{
     if (user) {
       this.setState({
         currentUser: user,
+        showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
 
@@ -44,16 +46,19 @@ class Navigation extends React.Component{
   
 
     render(){
-      const { currentUser } = this.state;
+      const { currentUser, } = this.state;
         return(
 <navbar>
-        <ul>
+        <ul className="main-nav-ul">
             <li className="nav_items"><Link to={'/'}className ="navbar_links">Home</Link></li>
-            <li className="nav_items"><Link to={'/add'}className ="navbar_links">Add Game</Link></li>
+            {this.state.showAdminBoard  && (
+            <li className="nav_items"><Link to={'/add'}className ="navbar_links">Add Game</Link></li>)}
             <li className="nav_items"><Link to={'/list'}className ="navbar_links">Game List</Link></li>
             <li className="nav_items"><Link to={'/login'}className ="navbar_links">Login</Link></li>
             <li className="nav_items"><Link to={'/signup'}className ="navbar_links">SignUp</Link></li>
-            <li className="nav_items"><Link onClick={this.logOut} to={''} className ="navbar_links">Logout</Link></li>
+
+            {currentUser && (
+            <li className="nav_items"><Link onClick={this.logOut} to={''} className ="navbar_links">Logout</Link></li>)}
 
             {currentUser ? (
 
@@ -67,7 +72,7 @@ class Navigation extends React.Component{
             </div>
           )}
 
-           
+
             
 
           

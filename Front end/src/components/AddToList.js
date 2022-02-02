@@ -6,7 +6,7 @@ import GameService from '../services/GameService';
 class AddToList extends React.Component{
     constructor(props){
         super(props);
-        this.state={gameId:'',rating:'',review:'',gamestatus:'',token:''};
+        this.state={gameId:'',rating:'',review:'',gamestatus:'',token:'',title:''};
         this.onChangeReview = this.onChangeReview.bind(this);
         this.onChangeRating = this.onChangeRating.bind(this);
         this.onChangeStatus = this.onChangeStatus.bind(this);
@@ -19,9 +19,7 @@ class AddToList extends React.Component{
     componentDidMount(){
         const gameId = +this.props.match.params.id;
         if(gameId){
-            this.setState({
-                gameId: gameId
-              });
+          this.getGameById(gameId);
             
         }
         const user = AuthService.getCurrentUser();
@@ -30,8 +28,28 @@ class AddToList extends React.Component{
             token: user.accessToken,
           });
         }
+        
     }
     
+
+
+    getGameById= (gameId)=>{
+      axios.get("http://localhost:8080/games/"+gameId)
+      .then(response =>{
+          if(response.data !=null){
+              this.setState({
+                  gameId:response.data.id,
+                  title:response.data.title
+
+              });
+          }
+      }).catch((error)=>{
+          console.error("error - "+error)
+      
+
+
+      });
+  }
 
 
     onChangeReview(e) {
@@ -70,6 +88,14 @@ class AddToList extends React.Component{
     submitForm(e){
         e.preventDefault(); 
         
+
+      //   const game = {
+      //     title: this.state.title,
+      //     id:this.state.id
+      // };
+      
+  // axios.post("http://localhost:8080/games",game)
+
 
    GameService.addToList(
        this.state.rating,
