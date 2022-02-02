@@ -11,7 +11,10 @@ import SignUp from './components/SignUp';
 import GameDetails from './components/GameDetails';
 import AddToList from './components/AddToList';
 import UserList from './components/UserList';
-
+import Recommendations from './components/Recommendations';
+import Profile from './components/Profile';
+import FriendsList from './components/FriendsList';
+import ChatRoom from './components/ChatRoom';
 
 
 
@@ -68,6 +71,12 @@ function App() {
         <Route path='/gameDetails/:id' exact component = {GameDetails}/>
         <Route path='/addToList/:id' exact component = {AddToList}/>
         <Route path='/userlist' exact component = {UserList}/>
+        <Route path='/userlist/:friendId' exact component = {UserList}/>
+        <Route path='/recommendations' exact component = {Recommendations}/>
+        <Route path='/profile' exact component = {Profile}/>
+        <Route path='/friends' exact component = {FriendsList}/>
+        <Route path='/chatroom' exact component = {ChatRoom}/>
+
   
         
 
