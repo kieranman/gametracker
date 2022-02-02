@@ -21,10 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Exceptions.ResourceNotFoundException;
-import com.example.dto.GameDto;
-import com.example.dto.GameService;
-import com.example.dto.UserListDto;
-import com.example.dto.UserListService;
 import com.example.model.Game;
 import com.example.model.User;
 import com.example.model.UserList;
@@ -47,9 +43,7 @@ public class UserListController {
 	
 	@Autowired
 	GameRepository gameRepository;
-	
-	@Autowired
-	GameService gameService;
+
 	
 	
 	@Autowired
@@ -87,19 +81,19 @@ public class UserListController {
 	
 	
 	
-	@GetMapping("/{token}")
-	public List<UserList> getUserList(@PathVariable("token") String token){
+	@GetMapping("/{id}")
+	public List<UserList> getUserList(@PathVariable("id") Long id){
 			
-			boolean validToken = jwtUtils.validateJwtToken(token);
-			if (validToken == false) {
+//			boolean validToken = jwtUtils.validateJwtToken(id);
+//			if (validToken == false) {
 //				return ResponseEntity.ok(new MessageResponse("Invalid Token!"));
-			}
-			String username = jwtUtils.getUserNameFromJwtToken(token);
+//			}
+//			String username = jwtUtils.getUserNameFromJwtToken(token);
 			
-			User user = userRepository.findByUsername(username)
-					.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-			Long userId = user.getId();
-			List<UserList> body = userListRepository.findAllByUserIdOrderByRatingDesc(userId);
+//			User user = userRepository.findByUsername(username)
+//					.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+//			Long userId = user.getId();
+			List<UserList> body = userListRepository.findAllByUserIdOrderByRatingDesc(id);
 			return body;
 	
 
@@ -136,12 +130,23 @@ public class UserListController {
 		        }
 		
 		List<String> top5Games = new ArrayList<>();
-		for(int i =0;i<5;i++) {
+		int counter =0;
+		for(int i =0;counter!=5;i++) {
+	
 			try {
-				top5Games.add(combinedGameListArray.get(combinedGameListArray.size()-i));
+				
+				if (userListRepository.existsByUserIdAndGameTitle(userId,combinedGameListArray.get(combinedGameListArray.size()-i-1))==false)
+				{
+					top5Games.add(combinedGameListArray.get(combinedGameListArray.size()-i-1));
+					counter+=1;
+				}
+
+
+				
+				
 			}
 			catch(Exception e) {
-				// do nothing
+				counter=5;
 			}
 		}
 		
@@ -277,9 +282,9 @@ public class UserListController {
 			
 			
 			Double cosineValue = cosineSimmilarity(UserRatings,otherUserRating);
-				if (cosineValue<0.99) {
+				if (cosineValue<0.99) { // 0.99 is it identifying exact match which is the target user
 					for (int j =0;j<combinedGameListArray.size();j++) {
-						Double otherUserRatingDouble = new Double(otherUserRating.get(j));//first way  
+						Double otherUserRatingDouble = new Double(otherUserRating.get(j));
 						if (weightedRating[j]==null) {
 							weightedRating[j]=cosineValue* otherUserRatingDouble;
 						}
@@ -313,11 +318,28 @@ public class UserListController {
 	
 	
 	private Double cosineSimmilarity(List<Integer> userRatings,List<Integer> otherUserRating) {
+		
+		double userRatingsSum =0;
+		double userRatingSize=0;
+		double otherUserRatingSum=0;
+		double otherUserRatingSize=0;
+		for (int i = 0; i < userRatings.size(); i++) {
+			userRatingsSum+=userRatings.get(i);
+			otherUserRatingSum+=otherUserRating.get(i);
+			if(userRatings.get(i)!=0) {
+				userRatingSize+=1;
+			}
+			if(otherUserRating.get(i)!=0) {
+				otherUserRatingSize+=1;
+			}
+		}
+		
+		
 	    double dotProduct = 0.0;
 	    double normA = 0.0;
 	    double normB = 0.0;
 	    for (int i = 0; i < userRatings.size(); i++) {
-	        dotProduct += userRatings.get(i) * otherUserRating.get(i);
+	        dotProduct += (userRatings.get(i)-(userRatingsSum/userRatingSize)) * (otherUserRating.get(i)-(otherUserRatingSum/otherUserRatingSize));
 	        normA += Math.pow(userRatings.get(i), 2);
 	        normB += Math.pow(otherUserRating.get(i), 2);
 	    }   

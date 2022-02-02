@@ -3,6 +3,7 @@ package com.example.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -62,6 +63,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			
 			//Allows the game controller endpoints
 			.antMatchers("/games").permitAll()
+			
+			
+			//websocket endpoints
+			.antMatchers("/chat/{username}").permitAll()
+			.antMatchers("/chat/**").permitAll()
+			.antMatchers("/ws/**").permitAll()
+			.antMatchers("/sendMessage/**").permitAll()
+			.antMatchers("/addUser/**").permitAll()
+			.antMatchers("/sendPrivateMessage/**").permitAll()
+			.antMatchers("/addPrivateUser/**").permitAll()
+			
+
+			
 			.antMatchers("/games/gameRating/{id}").permitAll()
 			.antMatchers("/userlist").permitAll()
 			.antMatchers("/games/{id}").permitAll()
@@ -69,8 +83,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/games/genre/{genre}").permitAll()
 			.antMatchers("/userlist/**").permitAll()
 			.antMatchers("/api/test/**").permitAll()
+			.antMatchers("/GameApi/games/{page}").permitAll()
+			.antMatchers("/addfriend").permitAll()
+			.antMatchers("/getfriends/{id}").permitAll()
+			.antMatchers("/recommendations/{userId}").permitAll()
 			.anyRequest().authenticated();
-
+		
+		
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

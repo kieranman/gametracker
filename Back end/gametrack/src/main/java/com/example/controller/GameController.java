@@ -156,6 +156,8 @@ public class GameController {
 		// delete game  item
 		@DeleteMapping("/games/{id}")
 		public ResponseEntity<Map<String, Boolean>> deleteGame(@PathVariable Long id){
+			List<UserList> userList= userListRepository.findAllByGameId(id);
+			userListRepository.deleteAll(userList);
 			Game game = gameRepository.findById(id)
 					.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id)); 
 			gameRepository.delete(game);
