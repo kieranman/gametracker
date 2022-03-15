@@ -44,127 +44,108 @@ import com.example.repository.UserListRepository;
 public class GameController {
 
 		
-		@Autowired
-		private GameRepository gameRepository;
+	@Autowired
+	private GameRepository gameRepository;
 		
-		@Autowired
-		private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 		
-		@Autowired
-		private UserListRepository userListRepository;
+	@Autowired
+	private UserListRepository userListRepository;
 
 
 		
 		
 		
-		//Search by game title
-		@GetMapping("/games/title/{title}")
-		public List<Game> getGameByTitle(@PathVariable String title){
-			List<Game> matchedTitles = gameRepository.findAllByTitleContaining(title);
-			return matchedTitles;
+	//Search by game title
+	@GetMapping("/games/title/{title}")
+	public List<Game> getGameByTitle(@PathVariable String title){
+		List<Game> matchedTitles = gameRepository.findAllByTitleContaining(title);
+		return matchedTitles;
 		}
-		//Search by game title
-		@GetMapping("/games/genre/{genre}")
-		public List<Game> getGameByGenre(@PathVariable String genre){
-			List<Game> matchedGenres = gameRepository.findAllByGenre1OrGenre2OrGenre3OrGenre4(genre,genre,genre,genre);
-			return matchedGenres;
-		}
-		
-		
-		
-		
-		//get games  + gets the average score of the game
-		@GetMapping("/games")
-		public List<Game> getGames(){
-			getGameRating();
-			return this.gameRepository.findAll();
-		}
-		
-		
-		
-		
-		
-		
-		// sets the average rating
-		public void getGameRating(){
-			List<Game> allGames = gameRepository.findAll();
-			for (Game a : allGames) {
-				a.setScore(getAverageScore(a.getId()));
-			}
-			gameRepository.saveAll(allGames);
+//	//Search by game title
+//	@GetMapping("/games/genre/{genre}")
+//	public List<Game> getGameByGenre(@PathVariable String genre){
+//		List<Game> matchedGenres = gameRepository.findAllByGenre1OrGenre2OrGenre3OrGenre4(genre,genre,genre,genre);
+//		return matchedGenres;
+//		}
+//
+//		//get games  + gets the average score of the game
+//	@GetMapping("/games")
+//	public List<Game> getGames(){
+//		getGameRating();
+//		return this.gameRepository.findAll();
+//		}
+//		// sets the average rating
+//	
 	
-		}
-		
-		private double getAverageScore(Long gameId) {
-			
-			
-			ArrayList<String> avgRating = new ArrayList<String>(); // Create an ArrayList object
-			List<UserList> allRatings = userListRepository.findAllByGameId(gameId);
-			
-			if (allRatings.isEmpty()) {
-				return 0;
+	
+	public void getGameRating(){
+		List<Game> allGames = gameRepository.findAll();
+		for (Game a : allGames) {
+			a.setScore(getAverageScore(a.getId()));
 			}
-			
-			double sumRatings = 0;
-			for(UserList a : allRatings) {
-					if (a.getRating()!=null){						
-						sumRatings+= a.getRating();
+		gameRepository.saveAll(allGames);
+		}
+	
+	
+	private double getAverageScore(Long gameId) {
+		ArrayList<String> avgRating = new ArrayList<String>(); // Create an ArrayList object
+		List<UserList> allRatings = userListRepository.findAllByGameId(gameId);
+		if (allRatings.isEmpty()) {
+			return 0;
+			}
+		double sumRatings = 0;
+		for(UserList a : allRatings) {
+			if (a.getRating()!=null){						
+				sumRatings+= a.getRating();
 					}
 			}
-
-			double averageRating = sumRatings/allRatings.size();
-			double roundOff = Math.round(averageRating * 100.0) / 100.0;
-			return roundOff ;
+		double averageRating = sumRatings/allRatings.size();
+		double roundOff = Math.round(averageRating * 100.0) / 100.0;
+		return roundOff ;
 		}
-		
-
-		
+	
 		// create game item
-		@PostMapping("/games")
-		public Game createGame(@RequestBody Game game) {
-			return gameRepository.save(game);
+	@PostMapping("/games")
+	public Game createGame(@RequestBody Game game) {
+		if (game.getScore()==null) {
+			game.setScore((double) 0);
 		}
-
-		
-		//get game by id
-		@GetMapping("/games/{id}")
-		public ResponseEntity<Game> getGameById(@PathVariable Long id){
-			Game game = gameRepository.findById(id)
-					.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id));
-			return ResponseEntity.ok(game);
-		
+		return gameRepository.save(game);
 		}
-		
-		//update game details
-		@PutMapping("/games/{id}")
-		public ResponseEntity<Game> updateGame(@PathVariable Long id,@RequestBody Game gameDetails){
-			Game game = gameRepository.findById(id)
-					.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id));
-			game.setTitle(gameDetails.getTitle());
-			game.setGenre1(gameDetails.getGenre1());
-			game.setGenre2(gameDetails.getGenre2());
-			game.setGenre3(gameDetails.getGenre3());
-			game.setGenre4(gameDetails.getGenre4());
-			game.setSynopsis(gameDetails.getSynopsis());
-			game.setPhotoURL(gameDetails.getPhotoURL());
-			
-			Game updateGame = gameRepository.save(game);
-			return ResponseEntity.ok(updateGame);
-		
+//		//get game by id
+	@GetMapping("/games/{id}")
+	public ResponseEntity<Game> getGameById(@PathVariable Long id){
+		Game game = gameRepository.findById(id)
+			.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id));
+		getGameRating();
+		return ResponseEntity.ok(game);
 		}
-		
-		// delete game  item
-		@DeleteMapping("/games/{id}")
-		public ResponseEntity<Map<String, Boolean>> deleteGame(@PathVariable Long id){
-			List<UserList> userList= userListRepository.findAllByGameId(id);
-			userListRepository.deleteAll(userList);
-			Game game = gameRepository.findById(id)
-					.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id)); 
-			gameRepository.delete(game);
-			Map<String,Boolean> response = new HashMap<>();
-			response.put("deleted", Boolean.TRUE);
-			return ResponseEntity.ok(response);
-			
-		}
+	
+//		//update game details
+//	@PutMapping("/games/{id}")
+//	public ResponseEntity<Game> updateGame(@PathVariable Long id,@RequestBody Game gameDetails){
+//		Game game = gameRepository.findById(id)
+//			.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id));
+//		game.setTitle(gameDetails.getTitle());
+//		Game updateGame = gameRepository.save(game);
+//		return ResponseEntity.ok(updateGame);
+//		
+//		}
+//		
+//	// delete game  item
+//	@DeleteMapping("/games/{id}")
+//	public ResponseEntity<Map<String, Boolean>> deleteGame(@PathVariable Long id){
+//		List<UserList> userList= userListRepository.findAllByGameId(id);
+//		userListRepository.deleteAll(userList);
+//		Game game = gameRepository.findById(id)
+//				.orElseThrow(() -> new ResourceNotFoundException("Game does not exist with id:"+id)); 
+//		gameRepository.delete(game);
+//		Map<String,Boolean> response = new HashMap<>();
+//		response.put("deleted", Boolean.TRUE);
+//		return ResponseEntity.ok(response);
+//			
+//		}
 		}
 

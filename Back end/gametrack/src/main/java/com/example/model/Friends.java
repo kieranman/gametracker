@@ -19,28 +19,32 @@ public class Friends {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "created_date")
     private Date createdDate;
+    
+    //added
+    @Column(name = "request_status")
+    private String requestStatus;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "first_user_id", referencedColumnName = "id")
     User firstUser;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "second_user_id", referencedColumnName = "id")
     User secondUser;
 
     public Friends() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -67,4 +71,13 @@ public class Friends {
     public void setSecondUser(User secondUser) {
         this.secondUser = secondUser;
     }
+
+	public String getRequestStatus() {
+		return requestStatus;
+	}
+
+	public void setRequestStatus(String requestStatus) {
+		this.requestStatus = requestStatus;
+	}
+    
 }

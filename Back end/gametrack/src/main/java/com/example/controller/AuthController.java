@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.repository.RoleRepository;
 import com.example.repository.UserRepository;
+import com.example.dto.UserDto;
 import com.example.model.ERole;
+import com.example.model.Game;
 import com.example.model.Role;
 import com.example.model.User;
+import com.example.model.UserList;
 //import com.bezkoder.springjwt.models.ERole;
 //import com.bezkoder.springjwt.models.Role;
 //import com.bezkoder.springjwt.models.User;
@@ -58,6 +64,23 @@ public class AuthController {
 
 	@Autowired
 	JwtUtils jwtUtils;
+	
+	
+	@GetMapping("/users")
+	public ArrayList<UserDto> getUsers(){
+		List<User> userlist = userRepository.findAll();
+		ArrayList<UserDto> userDtoList = new ArrayList<>();
+
+		for(User a : userlist) {
+			UserDto userObj = new UserDto();
+			userObj.setId(a.getId());
+			userObj.setUsername(a.getUsername());
+			userDtoList.add(userObj);
+		}
+		
+		return userDtoList;
+		}
+	
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -80,25 +103,6 @@ public class AuthController {
 												 roles));
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -106,18 +110,14 @@ public class AuthController {
 					.badRequest()
 					.body(new MessageResponse("Error: Username is already taken!"));
 		}
-
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
-
-		// Create new user's account
 		User user = new User(signUpRequest.getUsername(), 
 							 signUpRequest.getEmail(),
 							 encoder.encode(signUpRequest.getPassword()));
-
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
 
@@ -147,10 +147,8 @@ public class AuthController {
 				}
 			});
 		}
-
 		user.setRoles(roles);
 		userRepository.save(user);
-
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 }

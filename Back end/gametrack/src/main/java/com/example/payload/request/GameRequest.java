@@ -5,16 +5,9 @@ import javax.persistence.Column;
 public class GameRequest {
 
 	private String title;
-	
-
 	private String photoURL;
-	
-
 	private String genre1;
-	
-
 	private String genre2;
-
 	private String genre3;
 	private String genre4;
 	private String synopsis;

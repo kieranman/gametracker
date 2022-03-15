@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.security.jwt.AuthEntryPointJwt;
 import com.example.security.jwt.AuthTokenFilter;
@@ -63,19 +64,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			
 			//Allows the game controller endpoints
 			.antMatchers("/games").permitAll()
-			
+			.antMatchers("/genres").permitAll()
 			
 			//websocket endpoints
 			.antMatchers("/chat/{username}").permitAll()
 			.antMatchers("/chat/**").permitAll()
 			.antMatchers("/ws/**").permitAll()
-			.antMatchers("/sendMessage/**").permitAll()
+			.antMatchers("/message/**").permitAll()
 			.antMatchers("/addUser/**").permitAll()
 			.antMatchers("/sendPrivateMessage/**").permitAll()
 			.antMatchers("/addPrivateUser/**").permitAll()
 			
 
+			.antMatchers("/upload/{token}").permitAll()
+			.antMatchers("/files/{id}").permitAll()
 			
+
 			.antMatchers("/games/gameRating/{id}").permitAll()
 			.antMatchers("/userlist").permitAll()
 			.antMatchers("/games/{id}").permitAll()
@@ -83,10 +87,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/games/genre/{genre}").permitAll()
 			.antMatchers("/userlist/**").permitAll()
 			.antMatchers("/api/test/**").permitAll()
-			.antMatchers("/GameApi/games/{page}").permitAll()
-			.antMatchers("/addfriend").permitAll()
-			.antMatchers("/getfriends/{id}").permitAll()
+			
+			.antMatchers("/gameapi/**").permitAll()
+			
+			
+			.antMatchers("/addFriend").permitAll()
+			.antMatchers("/getFriends/{id}").permitAll()
+			.antMatchers("/getRequests/{id}").permitAll()
+			.antMatchers("/acceptRequest/{id}").permitAll()
+			.antMatchers("/declineRequest/{id}").permitAll()
+			
 			.antMatchers("/recommendations/{userId}").permitAll()
+			
 			.anyRequest().authenticated();
 		
 		

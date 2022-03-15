@@ -9,11 +9,10 @@ import com.example.model.Friends;
 import com.example.model.User;
 
 public interface FriendsRepository extends JpaRepository<Friends,Long> {
-    boolean existsByFirstUserAndSecondUser(User userObj,User friendObj);
-
-
-	List<Friends> findByfirstUserId(Long id);
-	List<Friends> findBysecondUserId(Long id);
+    
+	boolean existsByFirstUserAndSecondUser(User userObj,User friendObj);
+	List<Friends> findByfirstUserIdAndRequestStatus(Long id,String status);
+	List<Friends> findBysecondUserIdAndRequestStatus(Long id,String status);
 
 
 

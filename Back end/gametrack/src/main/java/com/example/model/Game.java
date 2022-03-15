@@ -28,35 +28,18 @@ import lombok.Data;
 public class Game {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name="title")
 	private String title;
-	
-	@Column(name="photoURL")
-	private String photoURL;
-	
-	@Column(name="genre1")
-	private String genre1;
-	
-	@Column(name="genre2")
-	private String genre2;
-	
-	@Column(name="genre3")
-	private String genre3;
-	
-	@Column(name="genre4")
-	private String genre4;
-	
+
 	@Column(name="avgScore")
 	private Double score;
 	
+	@Column(name="photoURL")
+	private String photoURL;
 
-	
-	@Column(name="synopsis", columnDefinition = "LONGTEXT")
-	private String synopsis;
-	
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "game")
     private List<UserList> userList;
@@ -67,20 +50,25 @@ public class Game {
 	}
 
 
-	public Game(String title, String synopsis,String photoURL,String genre1,String genre2,String genre3,String genre4,Double score) {
+	public Game(String title,Double score,String photoURL) {
 		super();
 		this.title = title;
-		this.synopsis = synopsis;
-		this.photoURL = photoURL;
-		this.genre1 = genre1;
-		this.genre2 =genre2;
-		this.genre3 = genre3;
-		this.genre4 = genre4;
 		this.score = score;
+		this.photoURL = photoURL;
 	}
 	
 	
 
+
+
+	public String getPhotoURL() {
+		return photoURL;
+	}
+
+
+	public void setPhotoURL(String photoURL) {
+		this.photoURL = photoURL;
+	}
 
 
 	public Double getScore() {
@@ -106,60 +94,6 @@ public class Game {
 		this.title = title;
 	}
 
-	public String getPhotoURL() {
-		return photoURL;
-	}
-	public void setPhotoURL(String photoURL) {
-		this.photoURL = photoURL;
-	}
-	public String getSynopsis() {
-		return synopsis;
-	}
-	public void setSynopsis(String synopsis) {
-		this.synopsis = synopsis;
-	}
-
-
-	public String getGenre1() {
-		return genre1;
-	}
-
-
-	public void setGenre1(String genre1) {
-		this.genre1 = genre1;
-	}
-
-
-	public String getGenre2() {
-		return genre2;
-	}
-
-
-	public void setGenre2(String genre2) {
-		this.genre2 = genre2;
-	}
-
-
-	public String getGenre3() {
-		return genre3;
-	}
-
-
-	public void setGenre3(String genre3) {
-		this.genre3 = genre3;
-	}
-
-
-	public String getGenre4() {
-		return genre4;
-	}
-
-
-	public void setGenre4(String genre4) {
-		this.genre4 = genre4;
-	}
-	
-	
 
 	
 	

@@ -6,14 +6,16 @@ import java.util.stream.Stream;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 import com.example.model.UserList;
-import com.example.payload.response.UserListResponse;
 
 @Repository
 public interface UserListRepository extends JpaRepository<UserList,Long> {
 	List<UserList> findAllByUserIdOrderByRatingDesc(Long userId);
 	
-	Boolean existsByUserIdAndGameId(Long userId,Long GameId);
+	Boolean existsByUserIdAndGameId(Long userId,Long gameId);
+	
+	UserList findByUserIdAndGameId(Long userId,Long gameId);
 
 	List<UserList> findAllByGameId(Long GameId);
 	
@@ -22,5 +24,8 @@ public interface UserListRepository extends JpaRepository<UserList,Long> {
 	List<UserList> findByStatus(String status);
 	
 	Boolean existsByUserIdAndGameTitle(Long userId,String title);
+
+	List<UserList> findAllByUserId(Long userId);
+
 
 }
